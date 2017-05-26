@@ -1235,9 +1235,9 @@ static FILE *
 dnsmasq_leasefile(void)
 {
 	FILE *leases = NULL;
-	struct uci_package *p;
-	struct uci_element *e;
-	struct uci_section *s;
+	struct uci_package *p = NULL;
+	struct uci_element *e = NULL;
+	struct uci_section *s = NULL;
 	struct uci_ptr ptr = {
 		.package = "dhcp",
 		.section = NULL,
