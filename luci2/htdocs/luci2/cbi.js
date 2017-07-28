@@ -2967,7 +2967,9 @@
 		{
 			var self = ev.data.self;
 
-			self.trigger('apply', ev);
+			self.apply().then(function() {
+				self.trigger('apply', ev);
+			});
 		},
 
 		handleSave: function(ev)
@@ -3174,6 +3176,33 @@
 
 			return $.when.apply($, deferreds).then(function() {
 				return L.deferrable(self.options.save.call(self));
+			});
+		},
+
+		apply: function()
+		{
+			if (!this.validate())
+				return L.deferrable();
+
+			var self = this;
+
+			L.ui.loading(true);
+
+			return this.save().then(function() {
+				return L.uci.save();
+			}).then(function() {
+				return L.uci.apply().then(function(code) {
+					alert('Success with code ' + code);
+				}, function(code) {
+					alert('Error with code ' + code);
+				});
+			}).then(function() {
+				self.load();
+			}).then(function() {
+				self.redraw();
+				self = null;
+				L.ui.loading(false);
+				L.ui.restoreScrollTop();
 			});
 		},
 
