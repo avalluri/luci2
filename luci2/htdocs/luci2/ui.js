@@ -686,8 +686,15 @@
 								style: 'confirm',
 								confirm: function() {
 									L.uci.apply().then(
-										function(code) { alert('Success with code ' + code); },
-										function(code) { alert('Error with code ' + code); }
+										function(code) {
+											L.ui.updateChanges();
+											L.ui.dialog(false);
+											alert('Success with code ' + code);
+										},
+										function(code) {
+											L.ui.dialog(false);
+											alert('Error with code ' + code);
+										}
 									);
 								}
 							});
