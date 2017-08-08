@@ -5,6 +5,12 @@ PROJECT(luci2-plugin C)
 ADD_DEFINITIONS(-Os -Wall -Werror --std=gnu99 -g3 -Wmissing-declarations -Iinclude)
 
 SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+SET(SSH_SERVER "dropbear" CACHE STRING "ssh server used")
+IF(SSH_SERVER STREQUAL "dropbear")
+  ADD_DEFINITIONS( -DSSH_SERVER_DROPBEAR)
+ELSEIF(SSH_SERVER STREQUAL "openssh")
+  ADD_DEFINITIONS( -DSSH_SERVER_OPENSSH)
+ENDIF()
 
 IF(APPLE)
   INCLUDE_DIRECTORIES(/opt/local/include)

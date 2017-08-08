@@ -674,8 +674,17 @@ rpc_luci2_sshkeys_get(struct ubus_context *ctx, struct ubus_object *obj,
 	FILE *f;
 	void *c;
 	char *p, line[4096];
+	char *ssh_keys_file = NULL;
 
-	if (!(f = fopen("/etc/dropbear/authorized_keys", "r")))
+#ifdef SSH_SERVER_OPENSSH
+	asprintf(&ssh_keys_file, "%s/.ssh/authorized_keys", getenv("HOME"));
+#else //if SSH_SERVER_DROPBEAR
+	asprintf(&ssh_keys_file, "%s", "/etc/dropbear/authorized_keys");
+#endif
+
+	f = fopen(ssh_keys_file, "r");
+	free(ssh_keys_file);
+	if (!f)
 		return rpc_errno_status();
 
 	blob_buf_init(&buf, 0);
@@ -708,6 +717,7 @@ rpc_luci2_sshkeys_set(struct ubus_context *ctx, struct ubus_object *obj,
 	FILE *f;
 	int rem;
 	struct blob_attr *cur, *tb[__RPC_K_MAX];
+	char *ssh_keys_file = NULL;
 
 	blobmsg_parse(rpc_sshkey_policy, __RPC_K_MAX, tb,
 	              blob_data(msg), blob_len(msg));
@@ -715,7 +725,15 @@ rpc_luci2_sshkeys_set(struct ubus_context *ctx, struct ubus_object *obj,
 	if (!tb[RPC_K_KEYS])
 		return UBUS_STATUS_INVALID_ARGUMENT;
 
-	if (!(f = fopen("/etc/dropbear/authorized_keys", "w")))
+#ifdef SSH_SERVER_OPENSSH
+	asprintf(&ssh_keys_file, "%s/.ssh/authorized_keys", getenv("HOME"));
+#else //if SSH_SERVER_DROPBEAR
+	asprintf(&ssh_keys_file, "%s", "/etc/dropbear/authorized_keys");
+#endif
+
+	f = fopen(ssh_keys_file, "w");
+	free(ssh_keys_file);
+	if (!f)
 		return rpc_errno_status();
 
 	blobmsg_for_each_attr(cur, tb[RPC_K_KEYS], rem)
