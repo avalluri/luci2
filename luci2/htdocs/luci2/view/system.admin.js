@@ -272,9 +272,9 @@ L.ui.view.extend({
 	execute: function() {
 		var self = this;
 		return self.getSSHKeys().then(function(keys) {
-			var m = new L.cbi.Map('dropbear', {
+			var m = new L.cbi.Map('sshd', {
 				caption:     L.tr('SSH Access'),
-				description: L.tr('Dropbear offers SSH network shell access and an integrated SCP server'),
+				description: L.tr('SSH server offers SSH network shell access and an integrated SCP server'),
 				tabbed:      true
 			});
 
@@ -321,9 +321,9 @@ L.ui.view.extend({
 			});
 
 
-			var s3 = m.section(L.cbi.TypedSection, 'dropbear', {
+			var s3 = m.section(L.cbi.TypedSection, 'server', {
 				caption:     L.tr('SSH Server'),
-				description: L.tr('This sections define listening instances of the builtin Dropbear SSH server'),
+				description: L.tr('This sections define listening instances of the builtin SSH server'),
 				addremove:   true,
 				add_caption: L.tr('Add instance ...'),
 				readonly:    !self.options.acls.admin,
@@ -332,12 +332,13 @@ L.ui.view.extend({
 
 			s3.option(L.cbi.NetworkList, 'Interface', {
 				caption:     L.tr('Interface'),
-				description: L.tr('Listen only on the given interface or, if unspecified, on all')
+				description: L.tr('Listen only on the given interface or, if unspecified, on all'),
+				optional:    true
 			});
 
 			s3.option(L.cbi.InputValue, 'Port', {
 				caption:     L.tr('Port'),
-				description: L.tr('Specifies the listening port of this Dropbear instance'),
+				description: L.tr('Specifies the listening port of this instance'),
 				datatype:    'port',
 				placeholder: 22,
 				optional:    true

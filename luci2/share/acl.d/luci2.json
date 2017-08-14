@@ -107,7 +107,7 @@
 				]
 			},
 			"uci": [
-				"dropbear"
+				"sshd"
 			]
 		},
 		"write": {
@@ -118,7 +118,7 @@
 				]
 			},
 			"uci": [
-				"dropbear"
+				"sshd"
 			]
 		}
 	},
